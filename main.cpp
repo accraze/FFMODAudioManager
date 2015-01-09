@@ -7,9 +7,13 @@
 //
 
 #include <iostream>
+#include <SFML/Window>
+#include "audioManager.h"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+    sf::Window window (sf::VideoMode(320,240), "Audio Playback");
+    sf::Clock clock;
+    
+    // initialize
+    AudioManager audio;
 }
