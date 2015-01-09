@@ -13,21 +13,47 @@
 #include <map>
 #include <fmod>
 
-typedef std::map<std::string, FMOD::Sound*> SoundMap;
-
 class AudioManager {
 public:
     AudioManager();
     ~AudioManager();
     void Update(float elapsed);
-    void Load(const std::string& path);
-    void Stream(const std::string& path);
-    void Play(const std::string& path);
+
+    void LoadSFX(const std::string& path);
+    void LoadSong(const std::string& path);
+
+    void PlaySFX(const std::string& path,
+                 float minVolume, float maxVolume,
+                 float minPitch, float maxPitch);
+
+    void PlaySong(const std::string& path);
+
+    void StopSFXs();
+    void StopSongs();
+
+    void SetMasterVolume(float volume);
+    void SetSFXsVolume(float volume);
+    void SetSongsVolume(float volume);
+
     
 private:
-    void LoadOrStream(const std::string& path, bool stream);
-    FMOD::System* system;
-    SoundMap sounds;
+  typedef std::map<std::string, FMOD::Sound*> SoundMap;
+  enum Category { CATEGORY_SFX, CATEGORY_SONG, CATEGORY_COUNT };
+
+  void Load(Category type, const std::strings& path);
+
+  FMOD::System* system;
+  FMOD::ChannelGroup* master;
+  FMOD::ChannelGroup* groups[CATEGORY_COUNT];
+  SoundMap sounds[CATEGORY_COUNT];
+  FMOD_MODE modes[CATEGORY_COUNT];
+
+  FMOD::Channel* currentSong;
+  std::string currentSongPath;
+  std::string nextSongPath;
+
+  enum FadeState { FADE_NONE, FADE_IN, FADE_OUT };
+  FadeState fade;
 };
 
 #endif // AudioManager_h_
